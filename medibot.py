@@ -1,3 +1,109 @@
+import os
+import streamlit as st
+
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.chains import RetrievalQA
+
+from langchain_chroma import Chroma
+from langchain_core.prompts import PromptTemplate
+from langchain_huggingface import HuggingFaceEndpoint
+from langchain_groq import ChatGroq
+
+
+## Uncomment the following files if you're not using pipenv as your virtual environment manager
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
+# Page Configuration
+st.set_page_config(
+    page_title="MediBot - Your AI Medical Assistant",
+    page_icon="🩺",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Custom CSS
+st.markdown("""
+<style>
+    /* Main Gradient Header */
+    .main-header {
+        background: linear-gradient(to right, #4b6cb7, #182848);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .main-header h1 {
+        color: white;
+        margin: 0;
+        font-size: 2.5rem;
+    }
+    .main-header p {
+        color: #e0e0e0;
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+    
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #262730; /* Dark sidebar */
+        border-right: 1px solid #444;
+    }
+    
+    /* Chat Message Styling */
+    .stChatMessage {
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    /* Feature Cards */
+    .feature-card {
+        background-color: #262730; /* Dark card background */
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        margin-bottom: 10px;
+        border: 1px solid #444;
+        color: white; /* Ensure text is white */
+    }
+    .feature-card h4 {
+        color: #4b6cb7; /* Accent color for headings */
+        margin-bottom: 5px;
+    }
+    .feature-card p {
+        color: #e0e0e0;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+        margin-top: 50px;
+        padding-top: 20px;
+        border-top: 1px solid #444;
+        color: #888;
+    }
+    
+    /* Hide Streamlit default menu */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
+
+DB_CHROMA_PATH="vectorstore/db_chroma"
+@st.cache_resource
+def get_vectorstore():
+    embedding_model=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+    db=Chroma(persist_directory=DB_CHROMA_PATH, embedding_function=embedding_model)
+    return db
+
+
+def set_custom_prompt(custom_prompt_template):
+    prompt=PromptTemplate(template=custom_prompt_template, input_variables=["context", "question"])
+    return prompt
 
 
 def load_llm(huggingface_repo_id, HF_TOKEN):
@@ -108,9 +214,10 @@ def main():
                 If you dont know the answer, just say that you dont know, dont try to make up an answer. 
                 Dont provide anything out of the given context
 
+                
                 Context: {context}
                 Question: {question}
-
+                
                 Start the answer directly. No small talk please.
                 """
         
