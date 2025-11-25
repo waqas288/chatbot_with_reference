@@ -4,7 +4,7 @@ import streamlit as st
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain_core.prompts import PromptTemplate
 from langchain_huggingface import HuggingFaceEndpoint
 from langchain_groq import ChatGroq
