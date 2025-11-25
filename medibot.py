@@ -127,7 +127,7 @@ def load_llm(huggingface_repo_id, HF_TOKEN):
 def main():
     # Sidebar
     with st.sidebar:
-        st.title("🩺 MediBot Config")
+        st.title("🩺 MedRAG Pro Config")
         st.markdown("---")
         
         # File Upload
