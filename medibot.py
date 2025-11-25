@@ -10,9 +10,13 @@ from langchain_huggingface import HuggingFaceEndpoint
 from langchain_groq import ChatGroq
 
 
-## Uncomment the following files if you're not using pipenv as your virtual environment manager
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+## Load environment variables (works for both local and Streamlit Cloud)
+try:
+    from dotenv import load_dotenv, find_dotenv
+    load_dotenv(find_dotenv())
+except:
+    # On Streamlit Cloud, use st.secrets instead of .env
+    pass
 
 # Page Configuration
 st.set_page_config(
@@ -227,11 +231,14 @@ def main():
                 st.error("Failed to load the vector store")
 
             # Note: Using the temperature from sidebar
+            # Get API key from Streamlit secrets or environment variable
+            groq_api_key = st.secrets.get("GROQ_API_KEY", os.environ.get("GROQ_API_KEY"))
+            
             qa_chain = RetrievalQA.from_chain_type(
                 llm=ChatGroq(
                     model_name="meta-llama/llama-4-maverick-17b-128e-instruct",  # free, fast Groq-hosted model
                     temperature=temperature, # Use sidebar temperature
-                    groq_api_key=os.environ["GROQ_API_KEY"],
+                    groq_api_key=groq_api_key,
                 ),
                 chain_type="stuff",
                 retriever=vectorstore.as_retriever(search_kwargs={'k':3}),
