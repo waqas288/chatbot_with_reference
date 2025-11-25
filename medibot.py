@@ -20,7 +20,7 @@ except:
 
 # Page Configuration
 st.set_page_config(
-    page_title="MediBot - Your AI Medical Assistant",
+    page_title="MedRAG Pro - Your AI Medical Assistant",
     page_icon="🩺",
     layout="wide",
     initial_sidebar_state="expanded"
