@@ -47,7 +47,7 @@ multidict==6.6.3; python_version >= '3.9'
 mypy-extensions==1.1.0; python_version >= '3.8'
 narwhals==1.46.0; python_version >= '3.9'
 networkx==3.5; python_version >= '3.11'
-numpy==2.3.1; python_version < '3.13'
+numpy
 orjson==3.10.18; platform_python_implementation != 'PyPy'
 packaging==24.2; python_version >= '3.8'
 pandas==2.3.1; python_version >= '3.9'
@@ -95,3 +95,4 @@ tzdata==2025.2; python_version >= '2'
 urllib3==2.5.0; python_version >= '3.9'
 yarl==1.20.1; python_version >= '3.9'
 zstandard==0.23.0; python_version >= '3.8'
+
